@@ -17,7 +17,7 @@ export async function createUser(
   mail: string,
   name: string,
 ): Promise<createUserResponce> {
-  try {
+  try  {
     const user = await privy.users().create({
       linked_accounts: [
         {
@@ -31,8 +31,9 @@ export async function createUser(
 
     const wallet = await privy.wallets().create({
       chain_type: "solana",
-      owner: { public_key: env.PRIVY_AUTH_ADDRESS! },
-    });
+      owner_id: env.PRIVY_AUTH_ADDRESS!
+      // owner: { public_key: env.PRIVY_AUTH_ADDRESS! },
+    }); 
     return { userId: user.id, walletId: wallet.id, address: wallet.address };
   } catch (error) {
     console.log(error);
@@ -52,27 +53,27 @@ async function getQuote(
   };
 
   const responce = await privy
-    .wallets()
-    .swaps()
-    .execute(walletId, {
-      destination: {
-        asset_address: stockAddress,
-      },
-      source: {
-        asset_address: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-        caip2: "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
-      },
-      base_amount: String(usdcAmount * 1000000),
-      amount_type: "exact_input",
-      authorization_context: authorizationContext,
-    });
+  .wallets()
+  .swaps()
+  .quote(walletId, {
+    destination: {
+      asset_address: stockAddress,
+    },
+    source: {
+      asset_address: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      caip2: "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+    },
+    base_amount: String(usdcAmount * 1000000),
+    amount_type: "exact_input",
+    // authorization_context: authorizationContext,
+  });
   console.log(responce);
 }
 
 // (async () => {
 //   try {
 //     const data = await getQuote(
-//       "pujv1iur1isxk6sver3eejnw",
+//       "z69y0wvml4ypn9vjmc8nfk7p",
 //       10,
 //       "XspzcW1PRtgf6Wj92HCiZdjzKCyFekVD8P5Ueh3dRMX",
 //     );
